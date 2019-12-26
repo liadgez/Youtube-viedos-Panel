@@ -1,12 +1,9 @@
 const Product = require('../models/product.model');
 
-//Simple version, without validation or sanitation
-exports.test = function (req, res) {
-    res.send('Greetings from the Test controller!');
-};
+exports.productsController = {
 
-exports.product_create = function (req, res) {
-    console.log(req.body)
+async product_create (req, res) {
+    if(!(isEmpty(req.body))) {
     let product = new Product(
         {
             Name: req.body.Name,
@@ -16,29 +13,33 @@ exports.product_create = function (req, res) {
 
     product.save(function (err) {
         if (err) {
-            return res.send(err) 
+            return res.status(500).send(err) 
         }
         res.send('Product Created successfully')
     })
-};
-//get one
-exports.product_details = function (req, res) {
+    }
+    else {
+        res.status(400).send(`Non valid input`);
+    }
+},
+ async product_details (req, res) {
     Product.findById(req.params.id, function (err, product) {
-        if (err) return res.send(err);
+        if (err) return res.status(500).send(err);
         res.send(product);
     })
-};
+},
 
-exports.product_update = function (req, res) {
+async product_update (req, res) {
     Product.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err) {
         if (err) return res.send(err);
         res.send('Product udpated.');
     });
-};
+},
 
-exports.product_delete = function (req, res) {
+async product_delete (req, res) {
     Product.findByIdAndRemove(req.params.id, function (err) {
         if (err) return res.send(err);
         res.send('Deleted successfully!');
     })
-};
+},
+}

@@ -5,10 +5,21 @@ const product_controller = require('../controllers/product.controller');
 
 
 //communication test
-router.put('/:id/update', product_controller.product_update);
-router.post('/create', product_controller.product_create);
-router.delete('/:id/delete', product_controller.product_delete);
-router.get('/:id', product_controller.product_details);
+router.put('/:id/update',(req,res)=>{
+   product_controller.product_update (req,res);
+  });
+
+router.post('/create',(req,res)=>{
+   product_controller.product_create(req,res);
+  });
+
+router.delete('/:id/delete',(req,res)=>{
+   product_controller.product_delete(req,res);
+});
+
+router.get('/:id',(req,res)=>{
+  product_controller.product_details(req,res);
+});
 // home route
 router.get("/", (req, res) => {
     res.json({
@@ -17,9 +28,7 @@ router.get("/", (req, res) => {
   });
   // deafualt route
   router.all("*", (req, res) => {
-    res.json({
-      message: "oh no, no route for you!"
-    });
+    res.status(400).send(`not found any page`);
   });
 
 module.exports = router;
